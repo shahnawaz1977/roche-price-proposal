@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./price-lead.component.css']
 })
 export class PriceLeadComponent implements OnInit {
-
+  isUser = true;
   constructor() { }
 
   ngOnInit(): void {

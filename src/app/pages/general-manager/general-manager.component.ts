@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./general-manager.component.css']
 })
 export class GeneralManagerComponent implements OnInit {
-
+  isUser = true;
   constructor() { }
 
   ngOnInit(): void {

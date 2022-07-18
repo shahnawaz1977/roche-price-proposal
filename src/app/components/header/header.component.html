@@ -1,0 +1,17 @@
+<header>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-6 d-flex align-items-center">
+                <div class="user-details" *ngIf="getUser">
+                    WELCOME, <span>{{username}}</span> | <a href="#" (click)="logout()">LOGOUT</a>
+                </div>
+            </div>
+            <div class="col-xl-6 d-flex align-items-center justify-content-end">
+                <div class="header-text">PRICE APPRAISAL & PROPOSAL</div>
+                <div class="logo">
+                    <img src="./assets/img/roche-logo.svg" alt="Roche Logo" />
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

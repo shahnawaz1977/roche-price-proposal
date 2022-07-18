@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cluster-head.component.css']
 })
 export class ClusterHeadComponent implements OnInit {
-
+  isUser = true;
   constructor() { }
 
   ngOnInit(): void {

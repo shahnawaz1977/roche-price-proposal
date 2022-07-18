@@ -1,0 +1,1413 @@
+<app-header [getUser]="isUser"></app-header>
+<main>
+    <aside>
+        <ul>
+            <li routerLink="/initiator"><i class="fa fa-2x fa-tachometer" aria-hidden="true"></i><span>Dashboard</span></li>
+            <li routerLink="/initiator/price-proposal" class="active"><i class="fa fa-2x fa-plus" aria-hidden="true"></i><span>New Proposal</span></li>
+        </ul>
+    </aside>
+
+    <section>
+        <div class="header-bar">
+            <div class="form-steppers">
+                <ul>
+                    <li (click)="clickStep(1)" [ngClass]="{'active': step >= 1}">1</li>
+                    <li [ngClass]="{'active': step >= 2}"></li>
+                    <li (click)="clickStep(2)" [ngClass]="{'active': step >= 2}">2</li>
+                    <li [ngClass]="{'active': step >= 3}"></li>
+                    <li (click)="clickStep(3)" [ngClass]="{'active': step >= 3}">3</li>
+                    <li [ngClass]="{'active': step >= 4}"></li>
+                    <li (click)="clickStep(4)" [ngClass]="{'active': step >= 4}">4</li>
+                    <li [ngClass]="{'active': step >= 5}"></li>
+                    <li (click)="clickStep(5)" [ngClass]="{'active': step >= 5}">5</li>
+                    <li [ngClass]="{'active': step >= 6}"></li>
+                    <li (click)="clickStep(6)" [ngClass]="{'active': step >= 6}">6</li>
+                </ul>
+            </div>
+            <ul>
+                <li class="notification">
+                    <div ngbDropdown class="d-inline-block">
+                        <i class="fa fa-lg fa-bell" id="dropdownBasic1" ngbDropdownToggle aria-hidden="true"></i>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button ngbDropdownItem>Notification-1</button>
+                            <button ngbDropdownItem>Notification-2</button>
+                            <button ngbDropdownItem>Notification-3</button>
+                        </div>
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+        <div class="main-container">
+
+            <div class="custom-card">
+
+                <div class="custom-form-container">
+                    <div id="step1" [ngClass]="{'d-none': step !== 1}">
+                        <form [formGroup]="step1Form" (ngSubmit)="onStep1Submit()" autocomplete="off">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <legend class="mb-3">Basic Proposal Form</legend>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Name of the proposer</label>
+                                            <input type="text" class="form-control" formControlName="proposerName" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('proposerName').hasError('required') }" readonly>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Name of the Cluster Head</label>
+                                            <input type="text" class="form-control" formControlName="clusterHeadName" value="Charles Methews" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('clusterHeadName').hasError('required') }" readonly>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Name of the Product SKUs</label>
+                                            <select class="form-control" formControlName="productSKU" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('productSKU').hasError('required') }" (change)="changeProductSKU()">
+                                                <option value="" disabled>Select Product SKU</option>
+                                                <option *ngFor="let product of productSKUList; index as i ">{{product.product}}</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group" [ngClass]="{'mb-1': step1Form.get('proposalIndication').value == 'Yes'}">
+                                            <label>Is the Proposal specific for a particular indication</label>
+                                            <div class="custom-options-inline" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('proposalIndication').hasError('required') }">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="proposalIndication" value="Yes" formControlName="proposalIndication" id="indication1" (change)="updateFormStep1('proposalIndication')">
+                                                    <label class="form-check-label" for="indication1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="proposalIndication" value="No" formControlName="proposalIndication" id="indication2" (change)="updateFormStep1('proposalIndication')">
+                                                    <label class="form-check-label" for="indication2">No</label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="step1Form.get('proposalIndication').value == 'Yes'">
+                                        <div class="form-group">
+                                            <select class="form-control" formControlName="proposalSpecific" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('proposalSpecific').hasError('required') }">
+                                                <option value="" disabled>Select Item</option>
+                                                <option *ngFor="let item of proposalSpecificList; index as i ">{{item.item}}</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>What is the proposal? <i class="fa fa-info-circle" placement="top" ngbTooltip="Please define in brief the main aspects of proposal" aria-hidden="true"></i></label>
+                                            <input type="text" class="form-control" placeholder="Please enter" formControlName="whatProposal" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('whatProposal').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>What is the Rationale behind the proposal?</label>
+                                            <input type="text" class="form-control" placeholder="Please enter" formControlName="rationaleBehind" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('rationaleBehind').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group" [ngClass]="{'mb-1': step1Form.get('higherPatient').value != ''}">
+                                            <label>Will the Proposal create higher patient access? <i class="fa fa-info-circle" placement="top" ngbTooltip="Greater than the ones mentioned in Business Dialogues" aria-hidden="true"></i></label>
+                                            <div class="custom-options-inline" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('higherPatient').hasError('required') }">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="higherPatient" id="higherPatient1" formControlName="higherPatient" value="Yes" (change)="updateFormStep1('higherPatient')">
+                                                    <label class="form-check-label" for="higherPatient1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="higherPatient" id="higherPatient2" formControlName="higherPatient" value="No" (change)="updateFormStep1('higherPatient')">
+                                                    <label class="form-check-label" for="higherPatient2">No</label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--If NO-->
+                                    <div class="col-12" *ngIf="step1Form.get('higherPatient').value == 'No'">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Patient Impact With Price Action</label>
+                                                    <input type="text" class="form-control" placeholder="[QUANTITATIVE] (Numbers only)" formControlName="higherPatientNo1" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('higherPatientNo1').hasError('required') }">
+                                                    <div class="invalid-feedback">
+                                                        This field is required
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Patient Impact Without Price Action</label>
+                                                    <input type="text" class="form-control" placeholder="[QUANTITATIVE] (Numbers only)" formControlName="higherPatientNo2" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('higherPatientNo2').hasError('required') }">
+                                                    <div class="invalid-feedback">
+                                                        This field is required
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--If Yes-->
+                                    <div class="col-12" *ngIf="step1Form.get('higherPatient').value == 'Yes'">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Patient Impact without Price Action= Business Dialogue Patient Impact</label>
+                                                    <input type="text" class="form-control" placeholder="[QUANTITATIVE] (Numbers only)" formControlName="higherPatientYes1" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('higherPatientYes1').hasError('required') }">
+                                                    <div class="invalid-feedback">
+                                                        This field is required
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Additional patient Impact because of Price Action  (over & above business dialogue)</label>
+                                                    <input type="text" class="form-control" placeholder="[QUANTITATIVE] (Numbers only)" formControlName="higherPatientYes2" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('higherPatientYes2').hasError('required') }">
+                                                    <div class="invalid-feedback">
+                                                        This field is required
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group" [ngClass]="{'mb-1': step1Form.get('proposedPilot').value != ''}">
+                                            <label>Is it proposed to be a Pilot?</label>
+                                            <div class="custom-options-inline" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('proposedPilot').hasError('required') }">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="proposedPilot" id="proposedPilot1" formControlName="proposedPilot" value="Yes" (change)="updateFormStep1('proposedPilot')">
+                                                    <label class="form-check-label" for="proposedPilot1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="proposedPilot" id="proposedPilot2" formControlName="proposedPilot" value="No" (change)="updateFormStep1('proposedPilot')">
+                                                    <label class="form-check-label" for="proposedPilot2">No</label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--If NO-->
+                                    <div class="col-md-3" *ngIf="step1Form.get('proposedPilot').value == 'Yes' || step1Form.get('proposedPilot').value == 'No'">
+                                        <div class="form-group">
+                                            <label>From Date</label>
+                                            <input type="text" class="form-control dateInput" ngbDatepicker #datePicker="ngbDatepicker" placeholder="DD/MM/YYYY" formControlName="proposedPilotFromDate" (click)="datePicker.toggle()" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('proposedPilotFromDate').hasError('required') }"
+                                                (dateSelect)="changeDate($event)" [minDate]="currentDate" [maxDate]="futureDate" readonly>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="step1Form.get('proposedPilot').value == 'Yes'">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">To Date</label>
+                                            <input type="text" class="form-control dateInput" ngbDatepicker #datePicker="ngbDatepicker" placeholder="DD/MM/YYYY" formControlName="proposedPilotToDate" (click)="datePicker.toggle()" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('proposedPilotToDate').hasError('required') }"
+                                                (dateSelect)="updateDuration($event)" [minDate]="updateFromDate" [maxDate]="futureDate" readonly>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--If Yes-->
+                                    <div class="col-md-3" *ngIf="step1Form.get('proposedPilot').value == 'Yes'">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Duration of Price Action</label>
+                                            <input type="text" class="form-control" placeholder="Please enter" formControlName="proposedPilotPriceAction" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('proposedPilotPriceAction').hasError('required') }" readonly>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Is the price action going to be passed to Patients to lead to patient benefit? </label>
+                                            <div class="custom-options-inline" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('patientBenefit').hasError('required') }">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="patientBenefit" id="patientBenefit1" formControlName="patientBenefit" value="Yes">
+                                                    <label class="form-check-label" for="patientBenefit1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="patientBenefit" id="patientBenefit2" formControlName="patientBenefit" value="No" (change)="proposalend($event)">
+                                                    <label class="form-check-label" for="patientBenefit2">No</label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- On no popup will apear and redirect to dashboard -->
+                                    <!-- Copy: As no price action will be undertaken without patient impact hence the proposal will be stopped. -->
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group mb-1">
+                                            <label>What is the Impact Expected in Patient NPTs because of this intervention?  <i class="fa fa-info-circle" placement="top" ngbTooltip="Whole number only and positive number only" aria-hidden="true"></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" [value]="selectedProductSKU" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Number only" formControlName="impactExpected" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('impactExpected').hasError('required') }" (keypress)="isNumberKey($event)" inputmode="numeric">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group mb-1">
+                                            <label>What is the Additional Impact Expected in Revenues because of this intervention (INR Million)?  <i class="fa fa-info-circle" placement="top" ngbTooltip="Positive decimal number" aria-hidden="true"></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" [value]="selectedProductSKU" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Number only" formControlName="additionalExpected" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('additionalExpected').hasError('required') }" (keypress)="isNumberKey($event)" inputmode="numeric">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group mt-2">
+                                            <h5>For the State What is the % dispersion between the following buckets for each product SKU (Optional)</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group mb-1">
+                                            <h6>SKU Sales from Contracted Private Accounts</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>1 year Before Price Action</label>
+                                            <input type="text" class="form-control" (keypress)="isNumberKey($event)" inputmode="numeric" placeholder="NO. % value" formControlName="beforePrice1" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('beforePrice1').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>1 year After Price Action</label>
+                                            <input type="text" class="form-control" (keypress)="isNumberKey($event)" inputmode="numeric" placeholder="NO. % value" formControlName="afterPrice1" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('afterPrice1').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group mb-1">
+                                            <h6>Sales from Distributors & Hospitals who are non contracted</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>1 year Before Price Action</label>
+                                            <input type="text" class="form-control" (keypress)="isNumberKey($event)" inputmode="numeric" placeholder="NO. % value" formControlName="beforePrice2" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('beforePrice2').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>1 year After Price Action</label>
+                                            <input type="text" class="form-control" (keypress)="isNumberKey($event)" inputmode="numeric" placeholder="NO. % value" formControlName="afterPrice2" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('afterPrice2').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group mb-1">
+                                            <h6>Sales from Reimbursed Public Accounts where PAPs are provided</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>1 year Before Price Action</label>
+                                            <input type="text" class="form-control" (keypress)="isNumberKey($event)" inputmode="numeric" placeholder="NO. % value" formControlName="beforePrice3" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('beforePrice3').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>1 year After Price Action</label>
+                                            <input type="text" class="form-control" (keypress)="isNumberKey($event)" inputmode="numeric" placeholder="NO. % value" formControlName="afterPrice3" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('afterPrice3').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group mb-1">
+                                            <h6> Sales from Public Accounts where PAPs are not provided</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>1 year Before Price Action</label>
+                                            <input type="text" class="form-control" (keypress)="isNumberKey($event)" inputmode="numeric" placeholder="NO. % value" formControlName="beforePrice4" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('beforePrice4').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>1 year After Price Action</label>
+                                            <input type="text" class="form-control" (keypress)="isNumberKey($event)" inputmode="numeric" placeholder="NO. % value" formControlName="afterPrice4" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('afterPrice4').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Beyond Price Action, what are the strategies with Milestones which are going to be implemented in the Accounts?</label>
+                                            <input type="text" class="form-control" placeholder="Please enter" formControlName="beyondPriceAction" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('beyondPriceAction').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group mt-2">
+                                            <h5>Source of Insights</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Name of the Insight <i class="fa fa-info-circle" placement="top" ngbTooltip="(Example: Upfront Cost/ Stagger/ Low Value Conviction/ Too much margins/ Less Understanding of Product benefit)- (Optional)" aria-hidden="true"></i></label>
+                                            <input type="text" class="form-control" placeholder="Please enter" formControlName="nameInsights" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('nameInsights').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Source of Insight <i class="fa fa-info-circle" placement="top" ngbTooltip="(Market Research/ hcp/patient/caregiver/pag (optional)" aria-hidden="true"></i></label>
+                                            <input type="text" class="form-control" placeholder="Please enter" formControlName="sourceInsights" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('sourceInsights').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>APART from PAP <i class="fa fa-info-circle" placement="top" ngbTooltip="Price Action what all can be done to address the Insight (Financial Instruments/ Deferred Payment/ Loan/ One of pricing Action)" aria-hidden="true"></i></label>
+                                            <input type="text" class="form-control" placeholder="Please enter" formControlName="sourceInsightsApart" [ngClass]="{'is-invalid': step1Submitted && step1Form.get('sourceInsightsApart').hasError('required') }">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="custom-file">
+                                                <label class="custom-file-label" for="setpFile1">Choose file...</label>
+                                                <div class="custom-options-inline">
+                                                    <input type="file" class="custom-file-input" name="sourceInsightsFile" formControlName="sourceInsightsFile" id="setpFile1" accept="application/pdf,application/vnd.ms-excel">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="alert alert-primary" role="alert" *ngIf="step1Next">{{step1Message}}</div>
+                                        <hr>
+                                        <div class="custom-form-action">
+                                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                                            <button type="button" class="btn btn-primary" [disabled]="!step1Next" (click)="clickStep(2)">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="step2" [ngClass]="{'d-none': step !== 2}">
+                        <form [formGroup]="step2Form" (ngSubmit)="onStep2Submit()" autocomplete="off">
+                            <div class="container-fluid" id="step2">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <legend class="mb-3">Doctor wise plan & Potential</legend>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered customTableWidth">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col" class="customColumnsSm">#</th>
+                                                        <th scope="col" class="customColumnsLg">Name of the doctor</th>
+                                                        <th scope="col" class="customColumnsLg">Name of the Account</th>
+                                                        <th scope="col" class="customColumnsLg">Name of the (Impacted) cluster</th>
+                                                        <th scope="col" class="customColumnsLg">Footfall of {{step1Form.controls['productSKU'].value}} <i class="fa fa-info-circle" placement="start" ngbTooltip="To be derived from dump basis product" aria-hidden="true" placeholder="Please enter"></i></th>
+                                                        <th scope="col" class="customColumnsLg">Footfall of {{step1Form.controls['proposalSpecific'].value}} Patient</th>
+                                                        <th scope="col" class="customColumnsLg">Diagnosed {{step1Form.controls['proposalSpecific'].value}} Patients</th>
+                                                        <th scope="col" class="customColumnsLg">Patients on Competition <i class="fa fa-info-circle" placement="start" ngbTooltip="eg: CERI/CRIZO" aria-hidden="true" placeholder="Please enter"></i></th>
+                                                        <th scope="col" class="customColumnsLg">Patients on ROCHE Products - {{step1Form.controls['productSKU'].value}} <i class="fa fa-info-circle" placement="start" ngbTooltip="eg: ALECENSA NPTs" aria-hidden="true" placeholder="Please enter"></i></th>
+
+                                                        <th scope="col" class="customColumnsLg">Plan of Action with the Doctor on Roche Products - {{step1Form.controls['productSKU'].value}} <i class="fa fa-info-circle" placement="start" ngbTooltip="*ALECENSA NPTs" aria-hidden="true" placeholder="Please enter"></i></th>
+                                                        <th scope="col" class="customColumnsLg">Number of Proposed Patients on Roche Products - {{step1Form.controls['productSKU'].value}} in 1st 3 months Cumulative <i class="fa fa-info-circle" placement="start" ngbTooltip="ALECENSA (1+2)" aria-hidden="true"
+                                                                placeholder="Please enter"></i></th>
+                                                        <th scope="col" class="customColumnsLg">Number of Proposed Patients on Roche Products - {{step1Form.controls['productSKU'].value}} in 1st 6 months Cumulative <i class="fa fa-info-circle" placement="start" ngbTooltip="ALECENSA (1+2)" aria-hidden="true"
+                                                                placeholder="Please enter"></i></th>
+                                                        <th scope="col" class="customColumnsLg">Number of Proposed Patients on Roche - {{step1Form.controls['productSKU'].value}} in 1 year from the launch of PAP <i class="fa fa-info-circle" placement="start" ngbTooltip="ALECENSA (1+2)" aria-hidden="true"
+                                                                placeholder="Please enter"></i></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody formArrayName="step2Fields" *ngFor="let field of step2Form.controls['step2Fields'].controls; let i = index">
+                                                    <tr [formGroupName]="i">
+                                                        <th scope="row" style="text-align: center; vertical-align: middle;">
+                                                            <i class="fa fa-times fa-lg" aria-hidden="true" (click)="removeTableRow(i)" *ngIf="i>0"></i>
+                                                            <input type="hidden" formControlName="proposalID" />
+                                                            <input type="hidden" formControlName="rowNo" />
+                                                        </th>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="doctorName" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('doctorName').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="accountName" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('accountName').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <select class="form-control" formControlName="clusterName" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('clusterName').hasError('required') }">
+                                                                    <option value="" disabled>Select Item</option>
+                                                                    <option *ngFor="let item of proposalSpecificList; index as i ">{{item.item}}</option>
+                                                                </select>
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="footfall" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('footfall').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="footfallPatient" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('footfallPatient').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="diagnosedPatient" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('diagnosedPatient').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="patientsCompetition" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('patientsCompetition').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="patientsRoche" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('patientsRoche').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="planAction" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('planAction').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="numberProposed3Month" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('numberProposed3Month').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="numberProposed6Month" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('numberProposed6Month').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" class="form-control" placeholder="Please enter" formControlName="numberProposed1Year" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step2Submitted && step2Form.controls['step2Fields'].controls[i].get('numberProposed1Year').hasError('required') }">
+                                                                <div class="invalid-feedback">
+                                                                    This field is required
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="step2CurRow < step2TableMaxRow">
+                                    <div class="col-12 mt-4">
+                                        <button type="button" class="btn btn-primary" (click)="addTableRow()">Add Row</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mt-4">
+                                        <div class="alert alert-primary" role="alert" *ngIf="step2Next">{{step2Message}}</div>
+                                        <hr>
+                                        <div class="custom-form-action">
+                                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                                            <button type="button" class="btn btn-primary" *ngIf="!step2Next" (click)="clickStep(3)">Skip</button>
+                                            <button type="button" class="btn btn-primary" *ngIf="step2Next" (click)="clickStep(3)">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="step3" [ngClass]="{'d-none': step !== 3}">
+                        <form [formGroup]="step3Form" (ngSubmit)="onStep3Submit()" autocomplete="off">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <legend class="mb-3">Account Information & Profile</legend>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group" [ngClass]="{'mb-1': step3Form.get('specificAccount').value != ''}">
+                                            <label>Is the proposal specific to a Account(s)?</label>
+                                            <div class="custom-options-inline" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('specificAccount').hasError('required') }">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="specificAccount1" name="specificAccount" value="Yes" formControlName="specificAccount" (click)="setRadioValueForm3('Yes', 'specificAccount')" (change)="specificAccount()">
+                                                    <label class="form-check-label" for="specificAccount1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="specificAccount2" name="specificAccount" value="No" formControlName="specificAccount" (click)="setRadioValueForm3('No', 'specificAccount')" (change)="specificAccount()">
+                                                    <label class="form-check-label" for="specificAccount2">No</label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3" *ngIf="step3Form.get('specificAccount').value == 'Yes'">
+                                            <div class="form-group">
+                                                <label>Name of the Account</label>
+                                                <input type="text" class="form-control" placeholder="Enter name of the account" formControlName="accountName" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('accountName').hasError('required') }">
+                                                <div class="invalid-feedback">
+                                                    This field is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" *ngIf="step3Form.get('specificAccount').value == 'No'">
+                                            <div class="form-group">
+                                                <label>Name of the Account</label>
+                                                <input type="text" class="form-control" placeholder="Enter name of the account" value="ALL" formControlName="accountName" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group" [ngClass]="{'mb-1': step3Form.get('specificSof').value != ''}">
+                                            <label>Is the proposal specific to a SoF?</label>
+                                            <div class="custom-options-inline" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('specificSof').hasError('required') }">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="specificSof1" name="specificSof" value="Yes" formControlName="specificSof" (click)="setRadioValueForm3('Yes', 'specificSof')" (change)="specificSof()">
+                                                    <label class="form-check-label" for="specificSof1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="specificSof2" name="specificSof" value="No" formControlName="specificSof" (click)="setRadioValueForm3('No', 'specificSof')" (change)="specificSof()">
+                                                    <label class="form-check-label" for="specificSof2">No</label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-5" *ngIf="step3Form.get('specificSof').value == 'Yes'">
+                                            <div class="form-group">
+                                                <label>Select SOF</label>
+                                                <select class="form-control" formControlName="sof" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('sof').hasError('required') }" (change)='onChangeSOF()'>
+                                                    <option value="" disabled>Select SOF</option>
+                                                    <option *ngFor="let sof of sofist; index as i" value="{{sof.value}}">{{sof.title}}</option>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    This field is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12" *ngIf="step3Form.get('specificSof').value == 'No' || (step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value != '')">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered customTableWidthSof" [ngClass]="{'customTableWidthSofAdded': step3Form.get('specificSof').value == 'Yes'}">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" class="customColumnsLg">&nbsp;</th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'ESIC/ESIS') || step3Form.get('specificSof').value == 'No'">ESIC/ESIS</th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'CGHS') || step3Form.get('specificSof').value == 'No'">CGHS</th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Army') || step3Form.get('specificSof').value == 'No'">Army</th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Railways') || step3Form.get('specificSof').value == 'No'">Railways</th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'PSU') || step3Form.get('specificSof').value == 'No'">PSU</th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'State Government') || step3Form.get('specificSof').value == 'No'">State Government</th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Affluent') || step3Form.get('specificSof').value == 'No'">OOP Affluent <i class="fa fa-info-circle" placement="start" ngbTooltip="Who do not have issues of affordability on Roche Drugs" aria-hidden="true" placeholder="Please enter"></i></th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Elite') || step3Form.get('specificSof').value == 'No'">OOP Elite <i class="fa fa-info-circle" placement="start" ngbTooltip="Who can afford drugs worth INR 20 Mn" aria-hidden="true" placeholder="Please enter"></i></th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP') || step3Form.get('specificSof').value == 'No'">OOP <i class="fa fa-info-circle" placement="start" ngbTooltip="Who can afford drugs worth INR 10- 15 Mn" aria-hidden="true" placeholder="Please enter"></i></th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP APL/BPL') || step3Form.get('specificSof').value == 'No'">OOP APL/BPL <i class="fa fa-info-circle" placement="start" ngbTooltip="Population Who has upto 10 lacs fund" aria-hidden="true" placeholder="Please enter"></i></th>
+
+                                                            <th scope="col" class="customColumnsLg" *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'BPL Population') || step3Form.get('specificSof').value == 'No'">BPL Population <i class="fa fa-info-circle" placement="start" ngbTooltip="Population covered under INR 5 lac basic cover" aria-hidden="true" placeholder="Please enter"></i></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Total Patient Potential by Product SKUs (based on the Product SKUs selected Above) in the Account (Account Incidence)</td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'ESIC/ESIS') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientESIC1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientESIC1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'CGHS') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientCGHS1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientCGHS1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Army') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientArmy1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientArmy1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Railways') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientRailways1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientRailways1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'PSU') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientPSU1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientPSU1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'State Government') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientSG1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientSG1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Affluent') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAFF1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAFF1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Elite') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPELI1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPELI1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAfford1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAfford1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP APL/BPL') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAPL1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAPL1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'BPL Population') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientBPL1" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientBPL1').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Total Number of Patients on any Targetted Therapy or Innovations <strong>(Name the Innovations)</strong></td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'ESIC/ESIS') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientESIC2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientESIC2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'CGHS') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientCGHS2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientCGHS2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Army') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientArmy2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientArmy2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Railways') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientRailways2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientRailways2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'PSU') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientPSU2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientPSU2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'State Government') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientSG2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientSG2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Affluent') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAFF2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAFF2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Elite') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPELI2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPELI2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAfford2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAfford2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP APL/BPL') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAPL2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAPL2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'BPL Population') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientBPL2" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientBPL2').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>By Product SKUs selected Above, what is the Existing Number of patients (last 1 year)</td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'ESIC/ESIS') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientESIC3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientESIC3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'CGHS') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientCGHS3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientCGHS3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Army') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientArmy3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientArmy3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Railways') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientRailways3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientRailways3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'PSU') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientPSU3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientPSU3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'State Government') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientSG3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientSG3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Affluent') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAFF3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAFF3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Elite') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPELI3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPELI3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAfford3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAfford3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP APL/BPL') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAPL3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAPL3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'BPL Population') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientBPL3" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientBPL3').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>By Product SKUs selected Above, what is the Proposed Number of patients (next 1 year)</td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'ESIC/ESIS') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientESIC4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientESIC4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'CGHS') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientCGHS4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientCGHS4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Army') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientArmy4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientArmy4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'Railways') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientRailways4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientRailways4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'PSU') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientPSU4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientPSU4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'State Government') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientSG4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientSG4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Affluent') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAFF4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAFF4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP Elite') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPELI4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPELI4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAfford4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAfford4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'OOP APL/BPL') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientOOPAPL4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientOOPAPL4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td *ngIf="(step3Form.get('specificSof').value == 'Yes' && step3Form.get('sof').value == 'BPL Population') || step3Form.get('specificSof').value == 'No'">
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" placeholder="Please enter" (keypress)="isNumberKey($event)" inputmode="numeric" formControlName="totalPatientBPL4" [ngClass]="{'is-invalid': step3Submitted && step3Form.get('totalPatientBPL4').hasError('required') }">
+                                                                    <div class="invalid-feedback">
+                                                                        This field is required
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12" [ngClass]="{'mt-4': step3Form.get('specificSof').value == 'No'}">
+                                        <div class="alert alert-primary" role="alert" *ngIf="step3Next">{{step3Message}}</div>
+                                        <hr>
+                                        <div class="custom-form-action">
+                                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                                            <button type="button" class="btn btn-primary" *ngIf="!step3Next" (click)="clickStep(4)">Skip</button>
+                                            <button type="button" class="btn btn-primary" *ngIf="step3Next" (click)="clickStep(4)">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="step4" [ngClass]="{'d-none': step !== 4}">
+                        <form [formGroup]="step4Form" (ngSubmit)="onStep4Submit()" autocomplete="off">
+                            <div class="container-fluid" id="step4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <legend class="mb-3">DOT</legend>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>What is the existing DOT of the Product SKU where Price action is required? (in cycles)</label>
+                                            <input type="text" class="form-control" placeholder="Qualitative Number" name="existingDOT" formControlName="existingDOT" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step4Submitted && step4Form.get('existingDOT').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>What will be the DOT for the product SKU when the price action is proposed? (In cycles)</label>
+                                            <input type="text" class="form-control" placeholder="Qualitative Number" name="productSKUDOT" formControlName="productSKUDOT" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step4Submitted && step4Form.get('productSKUDOT').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">If there is a change in DOT, what is the rationale?</label>
+                                            <input type="text" class="form-control" placeholder="Qualitative Text" name="changeDOT" formControlName="changeDOT" [ngClass]="{'is-invalid': step4Submitted && step4Form.get('changeDOT').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">What is the Systemic Change which is being brought about? (What challenges are we addressing today with the product SKUs which will reduce the access challenge for future innovations?)</label>
+                                            <input type="text" class="form-control" placeholder="Qualitative Text" name="systemicChange" formControlName="systemicChange" [ngClass]="{'is-invalid': step4Submitted && step4Form.get('systemicChange').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="alert alert-primary" role="alert" *ngIf="step4Next">{{step4Message}}</div>
+                                        <hr>
+                                        <div class="custom-form-action">
+                                            <input type="hidden" formControlName="proposalID" />
+                                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                                            <button type="button" class="btn btn-primary" *ngIf="!step4Next" (click)="clickStep(5)">Skip</button>
+                                            <button type="button" class="btn btn-primary" *ngIf="step4Next" (click)="clickStep(5)">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="step5" [ngClass]="{'d-none': step !== 5}">
+                        <form [formGroup]="step5Form" (ngSubmit)="onStep5Submit()" autocomplete="off">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <legend class="mb-3">Competitor Action</legend>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Name of the competition</label>
+                                            <input type="text" class="form-control" placeholder="Please enter" name="competitionName" formControlName="competitionName" [ngClass]="{'is-invalid': step5Submitted && step5Form.get('competitionName').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Competition Profile (If Any)- optional</label>
+                                            <input type="text" class="form-control" placeholder="Please enter" name="competitionProfile" formControlName="competitionProfile" [ngClass]="{'is-invalid': step5Submitted && step5Form.get('competitionProfile').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Existing Price</label>
+                                            <input type="text" class="form-control" placeholder="Please enter" name="existingPrice" formControlName="existingPrice" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step5Submitted && step5Form.get('existingPrice').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>% Premium or Discount (-) to our Product SKU</label>
+                                            <input type="text" class="form-control" placeholder="Please enter" formControlName="premiumDiscount" (keypress)="isNumberKey($event)" [ngClass]="{'is-invalid': step5Submitted && step5Form.get('premiumDiscount').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Existing PAPs/ Discounts (Open Ended)</label>
+                                            <input type="text" class="form-control" placeholder="Please enter" formControlName="papDiscount" [ngClass]="{'is-invalid': step5Submitted && step5Form.get('papDiscount').hasError('required') }">
+                                            <div class="invalid-feedback">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="alert alert-primary" role="alert" *ngIf="step5Next">{{step5Message}}</div>
+                                        <hr>
+                                        <div class="custom-form-action">
+                                            <input type="hidden" formControlName="proposalID" />
+                                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                                            <button type="button" class="btn btn-primary" *ngIf="!step5Next" (click)="clickStep(6)">Skip</button>
+                                            <button type="button" class="btn btn-primary" *ngIf="step5Next" (click)="clickStep(6)">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="container-fluid" [ngClass]="{'d-none': step !== 6}">
+                        <div class="row">
+                            <div class="col-12">
+                                <legend class="mb-3">Weekly Tracker</legend>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Name of the competition</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Please enter">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Competition Profile (If Any)- optional</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Please enter">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Existing Price</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Please enter">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">% Premium or Discount (-) to our Product SKU</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Please enter">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Existing PAPs/ Discounts (Open Ended)</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Please enter">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-primary" role="alert" *ngIf="step6Next">{{step6Message}}</div>
+                                <hr>
+                                <div class="custom-form-action">
+                                    <button type="submit" class="btn btn-outline-primary">Save</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- END PROPOSAL -->
+    <ng-template #proposalEnd let-modal>
+        <div class="modal-body">
+            <div class="custom-error-modal">
+                <i class="fa fa-exclamation-circle fa-3x" aria-hidden="true"></i>
+                <p>As no price action will be undertaken without patient impact hence the proposal will be stopped.</p>
+            </div>
+        </div>
+        <div class="modal-footer custom-error-modal-footer">
+            <button type="button" class="btn btn-outline-primary" (click)="resetCloseModal2(); modal.close('Save click')">Cancel</button>
+            <button class="btn btn-primary" (click)="closeModal(proposalEnd)">Ok</button>
+        </div>
+    </ng-template>
+    <!-- END PROPOSAL -->
+
+    <ng-template #proposalStart let-modal let-c="close" let-d="dismiss">
+        <form [formGroup]="proposalStartForm" (ngSubmit)="onProposalStartSubmit()" autocomplete="off">
+            <div class="modal-body">
+                <div class="custom-error-modal" style="text-align: left !important;">
+                    <div class="form-group">
+                        <label>Will the proposal require reduction in the List Price of the Product?</label>
+                        <div class="custom-options-inline" [ngClass]="{'is-invalid': proposalStartSubmitted && proposalStartForm.get('proposalRequire').hasError('required') }">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="proposalRequire" value="Yes" formControlName="proposalRequire" id="proposalRequire1" (change)="updateFormStep1('proposalIndication')">
+                                <label class="form-check-label" for="proposalRequire1">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="proposalRequire" value="No" formControlName="proposalRequire" id="proposalRequire2" (change)="updateFormStep1('proposalIndication')">
+                                <label class="form-check-label" for="proposalRequire2">No</label>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback">
+                            This field is required
+                        </div>
+                    </div>
+                    <p style="margin: 0; font-weight: 500;" *ngIf="proposalStartForm.get('proposalRequire').value == 'Yes'">List pricing changes are not encouraged as it increasing reference pricing risk</p>
+
+                </div>
+            </div>
+            <div class="modal-footer custom-error-modal-footer">
+                <button type="submit" class="btn btn-primary">Ok</button>
+            </div>
+        </form>
+    </ng-template>
+
+</main>

@@ -1,1 +1,36 @@
-<p>login works!</p>
+<app-header [getUser]="isUser"></app-header>
+<main>
+    <div class="login-card">
+        <div class="login-card-header">Login</div>
+        <div class="login-card-body">
+            <p class="error-msg" *ngIf="loginFailed">Invalid username and password!</p>
+            <form [formGroup]="loginForm" autocomplete="off">
+                <div class="form-group">
+                    <label>Email address</label>
+                    <input type="email" class="form-control" formControlName="email" placeholder="Email ID" [ngClass]="{'is-invalid': submitted && loginForm.get('email').hasError('required') || submitted && loginForm.get('email').hasError('email') }">
+                    <div class="invalid-feedback">
+                        <span *ngIf="submitted && loginForm.get('email').hasError('required')">Email is required!</span>
+                        <span *ngIf="submitted && loginForm.get('email').hasError('email')">Enter valid email id</span>
+                    </div>
+                    <!-- <div class="invalid-feedback" [ngClass]="{'d-block': submitted && loginForm.get('password').hasError('email')}">
+                        Enter valid email id
+                    </div> -->
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" formControlName="password" placeholder="Password" [ngClass]="{'is-invalid': submitted && loginForm.get('password').hasError('required') }">
+                    <div class="invalid-feedback">
+                        Password is required!
+                    </div>
+                </div>
+                <!-- <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                </div> -->
+                <div class="form-group mb-0">
+                    <button type="submit" class="btn btn-primary" (click)="onLogin()">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>

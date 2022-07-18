@@ -1,1 +1,91 @@
-<p>initiator works!</p>
+<app-header [getUser]="isUser"></app-header>
+<main>
+    <aside>
+        <ul>
+            <li routerLink="/initiator" class="active"><i class="fa fa-2x fa-tachometer" aria-hidden="true"></i><span>Dashboard</span></li>
+            <li routerLink="/initiator/price-proposal"><i class="fa fa-2x fa-plus" aria-hidden="true"></i><span>New Proposal</span></li>
+        </ul>
+    </aside>
+
+    <section>
+        <div class="header-bar">
+            <h3>Initiator Dashboard</h3>
+            <ul>
+                <li>
+                    <div class="search-bar" [ngClass]="{'loading': isLoading}">
+                        <input type="text" placeholder="Search" [(ngModel)]="searchKey" (ngModelChange)="search()" />
+                    </div>
+                </li>
+                <li class="notification">
+                    <div ngbDropdown class="d-inline-block">
+                        <i class="fa fa-lg fa-bell" id="dropdownBasic1" ngbDropdownToggle aria-hidden="true"></i>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button ngbDropdownItem>Notification-1</button>
+                            <button ngbDropdownItem>Notification-2</button>
+                            <button ngbDropdownItem>Notification-3</button>
+                        </div>
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+        <div class="main-container">
+            <div class="table-responsive custom-table">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Proposal no.</th>
+                            <th scope="col">Product name</th>
+                            <th scope="col">Proposal Status</th>
+                            <th scope="col">Created at</th>
+                            <th scope="col">Stage</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let proposal of proposalList | slice: (page-1) * pageSize : page * pageSize; index as i">
+                            <td>{{getYear(proposal.CreateAt)}}/{{proposal.ID}}</td>
+                            <td>{{proposal.Product}}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" [ngStyle]="applyProgress(1)" aria-valuemax="100">{{getProgress(1)}}%</div>
+                                </div>
+                            </td>
+                            <td>{{splitCreateAtDate(proposal.CreateAt)}}</td>
+                            <td>Initiator</td>
+                            <td><span class="badge na">NA</span></td>
+                            <td class="actionIcons">
+                                <i class="fa fa-eye fa-gap disabled" (click)="proposalView(proposal.ID)" aria-hidden="true"></i>
+                                <i class="fa fa-pencil-square-o fa-gap disabled" (click)="proposalEdit(proposal.id) " aria-hidden="true"></i>
+                                <i class="fa fa-download fa-gap disabled" (click)="proposalDownload(proposal.id) " aria-hidden="true"></i>
+                                <i class="fa fa-trash-o disabled" (click)="proposalDelete(proposal.id) " aria-hidden="true"></i>
+                            </td>
+                            <!-- <td>{{proposal.id}}</td>
+                            <td>{{proposal.productName}}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" [ngStyle]="applyProgress(proposal.proposalStatus)" aria-valuemax="100">{{getProgress(proposal.proposalStatus)}}%</div>
+                                </div>
+                            </td>
+                            <td>{{proposal.CreateBy}}</td>
+                            <td>{{proposal.CreatedAt}}</td>
+                            <td>{{proposal.propsalStage}}</td>
+                            <td><span class="badge" [ngClass]="{'na': proposal.status === 'NA', 'ongoing': proposal.status === 'Ongoing', 'returned': proposal.status === 'Returned', 'approved': proposal.status === 'Approved', 'rejected': proposal.status === 'Rejected'}">{{proposal.status}}</span></td>
+                            <td class="actionIcons">
+                                <i class="fa fa-eye fa-gap" (click)="proposalView(proposal.id)" aria-hidden="true" [ngClass]="{'disabled': proposal.action.view === 0}"></i>
+                                <i class="fa fa-pencil-square-o fa-gap " (click)="proposalEdit(proposal.id) " aria-hidden="true" [ngClass]="{'disabled': proposal.action.edit === 0}"></i>
+                                <i class="fa fa-download fa-gap " (click)="proposalDownload(proposal.id) " aria-hidden="true" [ngClass]="{'disabled': proposal.action.download === 0}"></i>
+                                <i class="fa fa-trash-o " (click)="proposalDelete(proposal.id) " aria-hidden="true" [ngClass]="{'disabled': proposal.action.delete === 0}"></i>
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-end mt-3 " *ngIf="proposalList.length>pageSize">
+                <ngb-pagination [collectionSize]="proposalList.length" [(page)]="page" [maxSize]="4" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
+            </div>
+        </div>
+    </section>
+
+</main>

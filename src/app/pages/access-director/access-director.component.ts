@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./access-director.component.css']
 })
 export class AccessDirectorComponent implements OnInit {
-
+  isUser = true;
   constructor() { }
 
   ngOnInit(): void {
